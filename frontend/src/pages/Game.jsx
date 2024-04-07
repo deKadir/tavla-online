@@ -16,6 +16,7 @@ const Game = () => {
             Roll dice
           </button>
         </div>
+        {/* Top */}
         {game.board
           .slice(0, 12)
           .map(({ index, checkers, canPlay, direction }) => (
@@ -29,6 +30,7 @@ const Game = () => {
               direction={direction}
             />
           ))}
+        {/* bottom */}
         {game.board
           .slice(12, 24)
           .reverse()
