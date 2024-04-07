@@ -1,7 +1,12 @@
 import Game from "./pages/Game";
+import GameProvider from "./context/GameProvider";
 
 function App() {
-  return <Game />;
+  return (
+    <GameProvider>
+      <Game />
+    </GameProvider>
+  );
 }
 
 export default App;

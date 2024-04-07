@@ -1,54 +1,31 @@
-import React, { useState } from "react";
+import React from "react";
 import Column from "../components/Game/Column";
-let id = 1;
-const checker = (color) => {
-  return {
-    id: id++,
-    color,
-  };
-};
-const generateCheckers = (color, length = 0) => {
-  const checkers = Array.from({ length }).map(() => checker(color));
-  return {
-    canPlay: false,
-    checkers,
-  };
-};
+import { useGameContext } from "../context/GameProvider";
+import { ACTIONS } from "../context/actions";
 
-const columns = [
-  { ...generateCheckers("black", 2) },
-  {},
-  {},
-  {},
-  {},
-  { ...generateCheckers("white", 5) },
-  {},
-  { ...generateCheckers("white", 3) },
-  {},
-  {},
-  {},
-  { ...generateCheckers("black", 5) },
-  { ...generateCheckers("white", 5) },
-  {},
-  {},
-  {},
-  { ...generateCheckers("black", 3) },
-  {},
-  { ...generateCheckers("black", 5) },
-  {},
-  {},
-  {},
-  {},
-  { ...generateCheckers("white", 2) },
-];
 const Game = () => {
-  const [board, setBoard] = useState(columns);
+  const { game, dispatch } = useGameContext();
+  console.log(game);
 
   return (
     <main className="wrapper">
       <div className="board">
-        {board.map(({ checkers = [], canPlay = false }, key) => (
-          <Column checkers={checkers} canPlay={canPlay} index={key + 1} />
+        <div className="dice-wrapper">
+          <span>{JSON.stringify(game.dice)}</span>
+          <button onClick={() => dispatch(ACTIONS.rollDice())}>
+            Roll dice
+          </button>
+        </div>
+        {game.board.map(({ index, checkers, canPlay, direction }) => (
+          <Column
+            key={index}
+            turn={game.turn}
+            dice={game.dice}
+            checkers={checkers}
+            canPlay={canPlay}
+            index={index}
+            direction={direction}
+          />
         ))}
       </div>
       <div>users</div>
