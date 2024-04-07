@@ -1,0 +1,66 @@
+:root {
+  --board-bg-color: #6f7887;
+  --board-border-color: #525f7a;
+  --board-border-width: 50px;
+  --board-witdh: 1000px;
+  --checker-bg-dark: black;
+  --checker-bg-light: white;
+  --divider-width: 50px;
+  --divider-color: var(--board-border-color);
+}
+.wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+}
+
+.board {
+  display: flex;
+  width: var(--board-witdh);
+  aspect-ratio: 2/1;
+  background-color: var(--board-bg-color);
+  border: var(--board-border-width) solid var(--board-border-color);
+  flex-wrap: wrap;
+}
+
+.column {
+  position: relative;
+  width: calc(calc(100% - var(--divider-width)) / 12);
+  height: 75%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.column::before {
+  content: attr(col-index);
+  position: absolute;
+}
+
+.divider {
+  width: var(--divider-width);
+  background-color: var(--divider-color);
+}
+.divider,
+.up {
+  justify-content: flex-start;
+}
+
+.down {
+  justify-content: flex-end;
+}
+
+.checker {
+  width: 50px;
+  aspect-ratio: 1;
+  border-radius: 50%;
+}
+.checker-dark {
+  background-color: var(--checker-bg-dark);
+}
+.checker-light {
+  background-color: var(--checker-bg-light);
+}
