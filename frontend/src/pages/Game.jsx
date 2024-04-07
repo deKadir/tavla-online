@@ -16,17 +16,33 @@ const Game = () => {
             Roll dice
           </button>
         </div>
-        {game.board.map(({ index, checkers, canPlay, direction }) => (
-          <Column
-            key={index}
-            turn={game.turn}
-            dice={game.dice}
-            checkers={checkers}
-            canPlay={canPlay}
-            index={index}
-            direction={direction}
-          />
-        ))}
+        {game.board
+          .slice(0, 12)
+          .map(({ index, checkers, canPlay, direction }) => (
+            <Column
+              key={index}
+              turn={game.turn}
+              dice={game.dice}
+              checkers={checkers}
+              canPlay={canPlay}
+              index={index}
+              direction={direction}
+            />
+          ))}
+        {game.board
+          .slice(12, 24)
+          .reverse()
+          .map(({ index, checkers, canPlay, direction }) => (
+            <Column
+              key={index}
+              turn={game.turn}
+              dice={game.dice}
+              checkers={checkers}
+              canPlay={canPlay}
+              index={index}
+              direction={direction}
+            />
+          ))}
       </div>
       <div>users</div>
     </main>
