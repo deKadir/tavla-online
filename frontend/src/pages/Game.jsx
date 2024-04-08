@@ -18,7 +18,7 @@ const Game = () => {
         {/* Top */}
         {game.board
           .slice(0, 12)
-          .map(({ index, checkers, canPlay, direction }) => (
+          .map(({ index, checkers, canPlay, direction, highlight }) => (
             <Column
               key={index}
               turn={game.turn}
@@ -27,13 +27,14 @@ const Game = () => {
               canPlay={canPlay}
               index={index}
               direction={direction}
+              highlight={highlight}
             />
           ))}
         {/* bottom */}
         {game.board
           .slice(12, 24)
           .reverse()
-          .map(({ index, checkers, canPlay, direction }) => (
+          .map(({ index, checkers, canPlay, direction, highlight }) => (
             <Column
               key={index}
               turn={game.turn}
@@ -41,6 +42,7 @@ const Game = () => {
               checkers={checkers}
               canPlay={canPlay}
               index={index}
+              highlight={highlight}
               direction={direction}
             />
           ))}

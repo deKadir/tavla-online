@@ -7,6 +7,7 @@
   --checker-bg-light: white;
   --divider-width: 50px;
   --divider-color: var(--board-border-color);
+  --highlight-color: #ffbf00;
 }
 .wrapper {
   display: flex;
@@ -53,9 +54,14 @@
   content: attr(col-index);
   position: absolute;
 }
+.column::after {
+  position: absolute;
+  width: 5px;
+  height: 100%;
+}
 
 .column.highlight {
-  background-color: red;
+  background-color: var(--highlight-color);
 }
 
 .divider {
