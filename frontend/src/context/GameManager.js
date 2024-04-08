@@ -124,12 +124,24 @@ class GameManager {
     if (!this.state.board[targetColIndex].highlight) {
       return this.state;
     }
+    //set move
     const checker = checkerCol.checkers[0];
+    const targetCol = this.state.board[targetColIndex];
+    if (
+      targetCol?.checkers?.length > 0 &&
+      targetCol.checkers?.[0].color !== this.state.turn
+    ) {
+      this.state.hits.push(targetCol.checkers[0]);
+      this.state.board[targetColIndex].checkers.splice(0, 1);
+    }
     this.state.board[targetColIndex].checkers.push(checker);
     this.state.board[checkerCol.index].checkers.splice(0, 1);
+    //handle possible moves
     const playedMove = targetColIndex - checkerCol.index;
     const moveIndex = this.state.possibleMoves.indexOf(playedMove);
+    //reset selected item
     this.state.selectedItem = null;
+    //set turn
     this.state.possibleMoves.splice(moveIndex, 1);
     if (this.state.possibleMoves.length === 0) {
       this.changeTurn();

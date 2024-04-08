@@ -25,15 +25,30 @@
   border: var(--board-border-width) solid var(--board-border-color);
   flex-wrap: wrap;
 }
+.hits-wrapper {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+}
 .dice-wrapper {
   position: absolute;
   display: flex;
   flex-direction: column;
   align-items: center;
-  left: 50%;
   top: 50%;
   color: white;
-  transform: translate(-50%, -50%);
+  z-index: 999;
+}
+.dice-wrapper.left {
+  right: 25%;
+  transform: translate(50%, -50%);
+}
+.dice-wrapper.right {
+  left: 10%;
+  transform: translate(50%, -50%);
 }
 .dice-wrapper button {
   scale: 0.5;

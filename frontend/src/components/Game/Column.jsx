@@ -2,7 +2,7 @@ import { useGameContext } from "../../context/GameProvider";
 import { ACTIONS } from "../../context/actions";
 import Checker from "./Checker";
 const Column = ({ checkers, direction, highlight, index }) => {
-  const { dispatch } = useGameContext();
+  const { game, dispatch } = useGameContext();
 
   const handleClick = () => {
     if (highlight) {

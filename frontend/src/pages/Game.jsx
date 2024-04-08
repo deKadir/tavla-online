@@ -2,6 +2,7 @@ import React from "react";
 import Column from "../components/Game/Column";
 import { useGameContext } from "../context/GameProvider";
 import { ACTIONS } from "../context/actions";
+import Checker from "../components/Game/Checker";
 
 const Game = () => {
   const { game, dispatch } = useGameContext();
@@ -9,11 +10,18 @@ const Game = () => {
   return (
     <main className="wrapper">
       <div className="board">
-        <div className="dice-wrapper">
+        <div
+          className={`dice-wrapper ${game.turn === "black" ? "left" : "right"}`}
+        >
           <span>{JSON.stringify(game.dice)}</span>
           <button onClick={() => dispatch(ACTIONS.rollDice())}>
             Roll dice
           </button>
+        </div>
+        <div className="hits-wrapper">
+          {game.hits.map((hit) => (
+            <Checker {...hit} key={hit.id} />
+          ))}
         </div>
         {/* Top */}
         {game.board
