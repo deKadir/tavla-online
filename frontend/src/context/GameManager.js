@@ -45,10 +45,16 @@ class GameManager {
     const moves = [];
 
     this.state.possibleMoves.forEach((move) => {
-      const targetIndex = colIndex + move;
-      if (targetIndex > 23) {
+      const targetIndex =
+        this.state.turn === "black" ? colIndex + move : colIndex - move;
+
+      if (targetIndex > 23 && this.state.turn === "black") {
         return;
       }
+      if (targetIndex < 0 && this.state.turn === "white") {
+        return;
+      }
+
       const targetCol = this.state.board[targetIndex];
       const targetCheckers = targetCol.checkers;
 
@@ -62,7 +68,7 @@ class GameManager {
         return;
       }
     });
-    console.log(moves);
+
     return moves;
   }
 
@@ -92,7 +98,8 @@ class GameManager {
     );
     const moves = this.calculateMoves(col.checkers[0]);
     moves.forEach((mv) => {
-      const targetIndex = col.index + mv;
+      const targetIndex =
+        this.state.turn === "black" ? col.index + mv : col.index - mv;
       this.state.board[targetIndex].highlight = true;
     });
     return this.state;
@@ -124,7 +131,13 @@ class GameManager {
     const moveIndex = this.state.possibleMoves.indexOf(playedMove);
     this.state.selectedItem = null;
     this.state.possibleMoves.splice(moveIndex, 1);
-
+    if (this.state.possibleMoves.length === 0) {
+      this.changeTurn();
+    }
+    return this.state;
+  }
+  changeTurn() {
+    this.state.turn = this.state.turn === "black" ? "white" : "black";
     return this.state;
   }
 }
