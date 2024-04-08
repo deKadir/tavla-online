@@ -54,6 +54,10 @@
   position: absolute;
 }
 
+.column.highlight {
+  background-color: red;
+}
+
 .divider {
   width: var(--divider-width);
   background-color: var(--divider-color);

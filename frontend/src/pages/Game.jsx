@@ -5,7 +5,6 @@ import { ACTIONS } from "../context/actions";
 
 const Game = () => {
   const { game, dispatch } = useGameContext();
-  console.log(game);
 
   return (
     <main className="wrapper">
