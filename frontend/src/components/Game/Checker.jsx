@@ -10,7 +10,10 @@ const Checker = (checker) => {
   return (
     <button
       className={`checker ${checkerClass} `}
-      onClick={() => dispatch(ACTIONS.selectChecker(checker.id))}
+      onClick={(e) => {
+        dispatch(ACTIONS.selectChecker(checker.id));
+        e.stopPropagation();
+      }}
       disabled={!checker.hasMove}
     ></button>
   );

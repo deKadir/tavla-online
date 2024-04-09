@@ -1,14 +1,8 @@
-import { randomInteger } from "../utils/game";
-
 class GameManager {
   constructor(state) {
     this.state = state;
   }
 
-  rollDice() {
-    this.state.dice = [randomInteger(1, 6), randomInteger(1, 6)];
-    return this.state;
-  }
   resetBoardStates() {
     this.state.board = this.state.board.map((col) => ({
       ...col,
@@ -74,6 +68,28 @@ class GameManager {
 
   highlightCheckers() {
     this.removeCheckerHighligts();
+    const hits = this.state.hits.filter((hit) => hit.color === this.state.turn);
+    if (hits.length > 0) {
+      const home = this.getHomeBoard();
+      home.forEach((col, index) => {
+        this.state.possibleMoves.forEach((dice) => {
+          const targetIndex = index - 1 + dice;
+          if (
+            [0, 1].includes(home[targetIndex]?.checkers?.length) ===
+              this.state.turn ||
+            home[targetIndex]?.checkers?.[0]?.color === this.state.turn
+          ) {
+            const lastHitIndex = this.state.hits.findLastIndex(
+              (hit) => hit.color === this.state.turn
+            );
+            this.state.hits[lastHitIndex].hasMove = true;
+          } else {
+            this.changeTurn();
+          }
+        });
+      });
+      return;
+    }
     this.state.board = this.state.board.map((col) => {
       if (!col.checkers.length) {
         return col;
@@ -96,6 +112,30 @@ class GameManager {
     const col = this.state.board.find(
       (col) => col.checkers?.[0]?.id === checkerId
     );
+
+    const isHit = this.state.hits.some((ch) => ch.id === checkerId);
+    if (isHit) {
+      const board = this.getHomeBoard();
+      board.forEach((col, index) => {
+        this.state.possibleMoves.forEach((move) => {
+          const target = index - 1 + move;
+          const targetCol = board[target];
+          console.log(targetCol);
+          if (
+            [0, 1].includes(targetCol?.checkers?.length) ||
+            board[target.checkers?.[0]?.color === this.state.turn]
+          ) {
+            const targetIndex = this.state.board.find(
+              (col) => col.index === targetCol.index
+            );
+            console.log(targetIndex);
+            // this.state.board[targetIndex].highlight = true;
+          }
+        });
+      });
+      return;
+    }
+
     const moves = this.calculateMoves(col.checkers[0]);
     moves.forEach((mv) => {
       const targetIndex =
@@ -151,6 +191,9 @@ class GameManager {
   changeTurn() {
     this.state.turn = this.state.turn === "black" ? "white" : "black";
     return this.state;
+  }
+  getHomeBoard() {
+    return this.state.turn === "black" ? black : white;
   }
 }
 

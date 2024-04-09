@@ -1,39 +1,50 @@
-import { createContext, useContext, useEffect, useReducer } from "react";
-import GameManager from "./GameManager";
+import { createContext, useContext, useReducer } from "react";
+import BlackManager from "./BlackManager";
+import WhiteManager from "./WhiteMaganer";
 import { ACTION_TYPES } from "./actions";
 import { produce } from "immer";
 import { initialColumns } from "../utils/game";
+import CheckerBlack from "./CheckerBlack";
+import CheckerWhite from "./CheckerWhite";
 
 const initialValues = {
   turn: "black",
   board: [...initialColumns],
   dice: [],
   hits: [],
-  possibleMoves: [],
+  moves: [],
   selectedItem: null,
 };
 const GameContext = createContext();
 
 const gameReducer = produce((state, action) => {
-  const manager = new GameManager(state);
+  let manager = null;
+  let checker = null;
+  if (state.turn === "black") {
+    checker = new CheckerBlack();
+    manager = new BlackManager(state, checker);
+  } else {
+    checker = new CheckerWhite();
+    manager = new WhiteManager(state, checker);
+  }
 
   switch (action.type) {
     case ACTION_TYPES.SELECT_CHECKER: {
-      state.selectedItem = action.checkerId;
-      manager.highlightColumns(state.selectedItem);
-      return state;
+      // state.selectedItem = action.checkerId;
+      console.log("select run");
+      manager.selectChecker(action.checkerId);
+      return manager.state;
     }
     case ACTION_TYPES.ROLL_DICE: {
       manager.rollDice();
-      manager.resetBoardStates();
-      manager.calculatePossibleMoves();
-      manager.highlightCheckers();
+      manager.setMoves();
+      manager.calculateMoves();
       return manager.state;
     }
     case ACTION_TYPES.MOVE_CHECKER: {
       manager.moveChecker(action.colIndex);
-      manager.removeColumnHighligts();
-      manager.highlightCheckers();
+      console.log("move run");
+      return manager.state;
     }
     default:
       return state;

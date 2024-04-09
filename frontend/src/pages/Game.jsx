@@ -9,7 +9,7 @@ const Game = () => {
 
   return (
     <main className="wrapper">
-      <div className="board">
+      <div className={`board`}>
         <div
           className={`dice-wrapper ${game.turn === "black" ? "left" : "right"}`}
         >

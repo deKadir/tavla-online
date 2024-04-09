@@ -25,6 +25,9 @@
   border: var(--board-border-width) solid var(--board-border-color);
   flex-wrap: wrap;
 }
+.turn-white {
+  transform: rotate(-180deg);
+}
 .hits-wrapper {
   position: absolute;
   display: flex;
