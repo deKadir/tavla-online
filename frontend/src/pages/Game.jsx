@@ -10,6 +10,36 @@ const Game = () => {
   return (
     <main className="wrapper">
       <div className={`board`}>
+        <div className="collect">
+          <div
+            className={`collect-white ${
+              game.canCollect && game.turn === "white"
+                ? "highlight-collect"
+                : ""
+            }`}
+            onClick={() => dispatch(ACTIONS.collectChecker())}
+          >
+            {game.collects
+              .filter((clt) => clt.color === "white")
+              .map(() => (
+                <div className="collect-item white" />
+              ))}
+          </div>
+          <div
+            className={`collect-black ${
+              game.canCollect && game.turn === "black"
+                ? "highlight-collect"
+                : ""
+            }`}
+            onClick={() => dispatch(ACTIONS.collectChecker())}
+          >
+            {game.collects
+              .filter((clt) => clt.color === "black")
+              .map(() => (
+                <div className="collect-item black" />
+              ))}
+          </div>
+        </div>
         <div
           className={`dice-wrapper ${game.turn === "black" ? "left" : "right"}`}
         >

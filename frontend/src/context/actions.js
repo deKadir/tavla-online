@@ -2,6 +2,7 @@ export const ACTION_TYPES = {
   SELECT_CHECKER: "SELECT_CHECKER",
   ROLL_DICE: "ROLL_DICE",
   MOVE_CHECKER: "MOVE_CHECKER",
+  COLLECT_CHECKER: "COLLECT_CHECKER",
 };
 
 export const ACTIONS = {
@@ -13,5 +14,8 @@ export const ACTIONS = {
   moveChecker: (colIndex) => ({
     type: ACTION_TYPES.MOVE_CHECKER,
     colIndex,
+  }),
+  collectChecker: () => ({
+    type: ACTION_TYPES.COLLECT_CHECKER,
   }),
 };

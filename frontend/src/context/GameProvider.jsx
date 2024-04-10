@@ -10,7 +10,9 @@ const initialValues = {
   dice: [],
   hits: [],
   moves: [],
+  collects: [{ color: "white" }, { color: "black" }],
   selectedItem: null,
+  canCollect: false,
 };
 const GameContext = createContext();
 
@@ -30,8 +32,10 @@ const gameReducer = produce((state, action) => {
     }
     case ACTION_TYPES.MOVE_CHECKER: {
       manager.moveChecker(action.colIndex);
-      console.log("move run");
       return manager.state;
+    }
+    case ACTION_TYPES.COLLECT_CHECKER: {
+      manager.collectChecker();
     }
     default:
       return state;
