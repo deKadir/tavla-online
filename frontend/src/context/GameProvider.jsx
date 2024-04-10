@@ -13,6 +13,7 @@ const initialValues = {
   collects: [{ color: "white" }, { color: "black" }],
   selectedItem: null,
   canCollect: false,
+  hasCollectable: false,
 };
 const GameContext = createContext();
 

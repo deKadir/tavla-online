@@ -13,7 +13,7 @@ const Game = () => {
         <div className="collect">
           <div
             className={`collect-white ${
-              game.canCollect && game.turn === "white"
+              game.hasCollectable && game.turn === "white"
                 ? "highlight-collect"
                 : ""
             }`}
@@ -27,7 +27,7 @@ const Game = () => {
           </div>
           <div
             className={`collect-black ${
-              game.canCollect && game.turn === "black"
+              game.hasCollectable && game.turn === "black"
                 ? "highlight-collect"
                 : ""
             }`}

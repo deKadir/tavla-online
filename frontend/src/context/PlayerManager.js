@@ -72,8 +72,8 @@ class Manager {
       highlight: false,
     }));
   }
-  getHomeBoard() {
-    return this.state.turn === "black"
+  getHomeBoard(color = this.state.turn) {
+    return color === "black"
       ? this.state.board.slice(0, 6)
       : this.state.board.slice(18, 24).reverse();
   }
@@ -113,21 +113,46 @@ class Manager {
     return moves;
   }
 
-  canCollectChecker() {
+  canCollectChecker(checkerId) {
+    const hasCollectable = this.state.moves.some((mv) => {
+      const collectIndex = this.state.turn === "white" ? mv - 1 : 24 - mv;
+
+      const checker = this.state.board[collectIndex]?.checkers?.[0]?.id;
+      return checker === checkerId;
+    });
+    if (hasCollectable) {
+      return true;
+    }
+    const board = this.state.board.filter(
+      (col) => col?.checkers?.[0]?.color === this.state.turn
+    );
+    const lastIndex = this.state.turn === "white" ? board.length - 1 : 0;
+    const collectIndex = board[lastIndex].index;
+    const collectMove =
+      this.state.turn === "white" ? collectIndex + 1 : 24 - collectIndex;
+
+    const hasSmallerMove = this.state.moves.some((mv) => {
+      if (mv >= collectMove) {
+        return board[lastIndex]?.checkers?.[0]?.id === checkerId;
+      }
+    });
+    return hasSmallerMove;
+  }
+
+  canCollectCheckers() {
     const hits = this.getHits();
     if (hits.length > 0) {
       return false;
     }
+
     let homeIndexes =
-      this.state.turn === "black"
+      this.state.turn === "white"
         ? [0, 1, 2, 3, 4, 5]
         : [23, 22, 21, 20, 19, 18];
-    const canCollect = this.state.board.every(
-      (col) =>
-        homeIndexes.includes(col.index) ||
-        isEmpty(col?.checkers) ||
-        col?.checkers?.[0]?.color !== this.state.turn
-    );
+    const canCollect = this.state.board
+      .filter((col) => col?.checkers?.[0]?.color === this.state.turn)
+      .every((col) => homeIndexes.includes(col.index));
+
     return canCollect;
   }
 
@@ -174,16 +199,21 @@ class Manager {
     this.calculateMoves();
   }
   selectChecker(checkerId) {
+    this.state.hasCollectable = false;
     this.state.selectedChecker = checkerId;
     this.removeAllHighlights();
 
     const columns = this.calculateCheckerMove(checkerId);
+    if (this.canCollectChecker(checkerId)) {
+      this.state.hasCollectable = true;
+    }
     this.highlightColumns(...columns);
   }
   endGame() {
     alert(this.state.turn + "wins the game!");
   }
   calculateMoves() {
+    this.state.canCollect = false;
     this.disableAllCheckers();
     const hits = this.getHits();
     if (!isEmpty(hits)) {
@@ -214,29 +244,38 @@ class Manager {
       });
     }
 
-    if (this.canCollectChecker()) {
-      this.state.canCollect = true;
-      const board = this.getHomeBoard();
-      board.forEach((col) => {
-        //enable checker if there is move for checker
-        if (!isEmpty(col.checkers)) {
-          const colIndex =
-            this.state.turn === "black" ? col.index : col.index - 23;
-          if (this.state.moves.includes(colIndex)) {
-            this.enableChecker(col.checkers[0].id);
-            this.state.canCollect = true;
-          }
+    if (this.canCollectCheckers() && this.state.moves.length > 0) {
+      let hasCheckerForCollect = false;
+      this.state.moves.forEach((mv) => {
+        const collectIndex = this.state.turn === "white" ? mv - 1 : 24 - mv;
+        const checkerId = this.state.board[collectIndex]?.checkers?.[0]?.id;
+        if (checkerId) {
+          this.enableChecker(checkerId);
         }
       });
+      if (!hasCheckerForCollect) {
+        const board = this.state.board.filter(
+          (col) => col?.checkers?.[0]?.color === this.state.turn
+        );
+        const lastIndex = this.state.turn === "white" ? board.length - 1 : 0;
+        const collectIndex = board[lastIndex].index;
+        const collectMove =
+          this.state.turn === "white" ? collectIndex + 1 : 24 - collectIndex;
+
+        this.state.moves.forEach((mv) => {
+          if (mv >= collectMove) {
+            this.enableChecker(board[lastIndex]?.checkers?.[0]?.id);
+          }
+        });
+      }
       //enable last checker if there is no matching checker
       const cols = this.state.board.filter(
         (col) => col?.checkers?.[0]?.color === this.state.turn
       );
       if (cols.length) {
-        const lastColIndex = this.state.turn === "white" ? 0 : cols.length - 1;
+        const lastColIndex = this.state.turn === "white" ? cols.length - 1 : 0;
         const checker = cols[lastColIndex].checkers[0];
         this.enableChecker(checker.id);
-        this.state.canCollect = true;
       } else {
         this.endGame();
       }
@@ -266,7 +305,11 @@ class Manager {
         colIndex
       ].checkers.filter((ch) => ch.id !== this.state.selectedChecker);
       this.state.canCollect = false;
+      const playedMove = colIndex > 17 ? 24 - colIndex : colIndex + 1;
+      this.state.moves.splice(this.state.moves.indexOf(playedMove), 1);
       this.state.selectedChecker = null;
+      this.state.hasCollectable = false;
+      this.calculateMoves();
     }
   }
   hasAvailableMoves() {
