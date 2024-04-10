@@ -1,10 +1,9 @@
-import Game from "./pages/Game";
 import GameProvider from "./context/GameProvider";
-
+import Pages from "./pages";
 function App() {
   return (
     <GameProvider>
-      <Game />
+      <Pages />
     </GameProvider>
   );
 }

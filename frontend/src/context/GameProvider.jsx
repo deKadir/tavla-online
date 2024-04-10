@@ -10,7 +10,7 @@ const initialValues = {
   dice: [],
   hits: [],
   moves: [],
-  collects: [{ color: "white" }, { color: "black" }],
+  collects: [],
   selectedItem: null,
   canCollect: false,
   hasCollectable: false,
