@@ -1,11 +1,8 @@
 import { createContext, useContext, useReducer } from "react";
-import BlackManager from "./BlackManager";
-import WhiteManager from "./WhiteMaganer";
+import PlayerManager from "./PlayerManager";
 import { ACTION_TYPES } from "./actions";
 import { produce } from "immer";
 import { initialColumns } from "../utils/game";
-import CheckerBlack from "./CheckerBlack";
-import CheckerWhite from "./CheckerWhite";
 
 const initialValues = {
   turn: "black",
@@ -18,20 +15,10 @@ const initialValues = {
 const GameContext = createContext();
 
 const gameReducer = produce((state, action) => {
-  let manager = null;
-  let checker = null;
-  if (state.turn === "black") {
-    checker = new CheckerBlack();
-    manager = new BlackManager(state, checker);
-  } else {
-    checker = new CheckerWhite();
-    manager = new WhiteManager(state, checker);
-  }
+  const manager = new PlayerManager(state);
 
   switch (action.type) {
     case ACTION_TYPES.SELECT_CHECKER: {
-      // state.selectedItem = action.checkerId;
-      console.log("select run");
       manager.selectChecker(action.checkerId);
       return manager.state;
     }
