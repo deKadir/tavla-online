@@ -247,6 +247,7 @@ class Manager {
     }
 
     if (this.canCollectCheckers() && this.state.moves.length > 0) {
+      console.log("can collect and has moves");
       let hasCheckerForCollect = false;
       this.state.moves.forEach((mv) => {
         const collectIndex = this.state.turn === "white" ? mv - 1 : 24 - mv;
@@ -254,6 +255,7 @@ class Manager {
         if (checkerId) {
           this.enableChecker(checkerId);
         }
+        console.log("mv", mv);
       });
       if (!hasCheckerForCollect) {
         const board = this.state.board.filter(
@@ -263,12 +265,18 @@ class Manager {
         const collectIndex = board[lastIndex].index;
         const collectMove =
           this.state.turn === "white" ? collectIndex + 1 : 24 - collectIndex;
-
-        this.state.moves.forEach((mv) => {
-          if (mv >= collectMove) {
-            this.enableChecker(board[lastIndex]?.checkers?.[0]?.id);
-          }
-        });
+        const hasSmall = this.state.moves.some((mv) => mv >= collectMove);
+        if (!hasSmall) {
+          console.log("has no small");
+          this.changeTurn();
+        } else {
+          console.log("has small");
+          this.state.moves.forEach((mv) => {
+            if (mv >= collectMove) {
+              this.enableChecker(board[lastIndex]?.checkers?.[0]?.id);
+            }
+          });
+        }
       }
       //enable last checker if there is no matching checker
       const cols = this.state.board.filter(
@@ -280,6 +288,7 @@ class Manager {
         this.enableChecker(checker.id);
       }
     }
+
     if (!this.hasAvailableMoves()) {
       this.changeTurn();
     }
@@ -315,7 +324,9 @@ class Manager {
   hasAvailableMoves() {
     const isHit = this.state.hits.some((hit) => hit?.hasMove);
     const hasMove = this.state.board.some((col) => col?.checkers?.[0]?.hasMove);
-    return hasMove || isHit;
+    const hasAvailableMoves = this.state.moves !== 0;
+    console.log("isHit", isHit, "hasMove", hasMove);
+    return hasMove || isHit || hasAvailableMoves;
   }
 
   changeTurn() {
