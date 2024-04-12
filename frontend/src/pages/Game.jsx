@@ -6,6 +6,7 @@ import Checker from "../components/Game/Checker";
 import { useParams } from "react-router-dom";
 import { api, socket } from "../api";
 import WinModal from "../components/Game/WinnerModal";
+import clx from "classnames";
 const Game = () => {
   const { game, dispatch } = useGameContext();
   const [error, setError] = useState("");
@@ -23,6 +24,15 @@ const Game = () => {
       return game?.board;
     }
   }, [player?.color, game?.board]);
+
+  const players = useMemo(
+    () =>
+      game.players.filter((player) =>
+        ["white", "black"].includes(player.color)
+      ),
+    [game.players]
+  );
+  console.log(game.players);
   useEffect(() => {
     (async () => {
       setError("");
@@ -33,9 +43,9 @@ const Game = () => {
       try {
         const { data: roomData } = await api.getRoom(roomId);
         const { id, hits, board, status, collect, players } = roomData;
-        socket.emit("join room", roomId, (player) => {
-          console.log(player);
+        socket.emit("join room", roomId, (player, room) => {
           dispatch(ACTIONS.setPlayer(player));
+          dispatch(ACTIONS.setGame({ ...room }));
         });
         dispatch(
           ACTIONS.setGame({ hits, board, status, collect, roomId: id, players })
@@ -52,7 +62,6 @@ const Game = () => {
     });
   }, [socket, game.roomId]);
 
-  console.log(board);
   if (error) {
     return (
       <main>
@@ -144,7 +153,22 @@ const Game = () => {
             />
           ))}
       </div>
-      {/* <div>users</div> */}
+      <div className="players">
+        {players?.map((player) => (
+          <div
+            className={clx("player", {
+              "player-white": player.color === "white",
+              "player-black": player.color === "black",
+              active: player.color === game.turn,
+            })}
+          >
+            {player.nickname}
+          </div>
+        ))}
+        {players.length === 1 && (
+          <div className="player player-black">Bekleniyor...</div>
+        )}
+      </div>
     </main>
   );
 };

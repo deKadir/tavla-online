@@ -156,7 +156,7 @@ class Manager {
     const canCollect = this.state.board
       .filter((col) => col?.checkers?.[0]?.color === this.state.turn)
       .every((col) => homeIndexes.includes(col.index));
-    console.log(canCollect);
+
     return canCollect;
   }
 
@@ -216,7 +216,7 @@ class Manager {
 
   calculateMoves() {
     this.state.canCollect = false;
-
+    this.disableAllHighlights();
     this.disableAllCheckers();
     const hits = this.getHits();
     if (!isEmpty(hits)) {
@@ -294,6 +294,13 @@ class Manager {
         : col?.checkers.map((ch) => ({ ...ch, hasMove: false })),
     }));
     return this.state;
+  }
+
+  disableAllHighlights() {
+    this.state.board = this.state.board.map((col) => ({
+      ...col,
+      highlight: false,
+    }));
   }
 
   collectChecker() {

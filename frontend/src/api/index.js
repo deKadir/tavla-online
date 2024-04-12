@@ -1,6 +1,6 @@
 import { io } from "socket.io-client";
 import axios from "axios";
-const baseURL = "https://tavla-online-1.onrender.com/";
+const baseURL = "http://localhost:3333";
 const req = axios.create({ baseURL });
 const socket = io(baseURL);
 const api = {

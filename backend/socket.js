@@ -40,9 +40,10 @@ class Socket {
     callback(room);
   }
   joinRoom(socket, roomId, callback) {
-    manager.joinRoom(socket.id, roomId);
+    const room = manager.joinRoom(socket.id, roomId);
     const player = manager.findPlayerById(socket.id);
-    callback(player);
+    callback(player, room);
+    socket.broadcast.emit(roomId, room);
   }
   handleRoom(socket, room) {
     const { roomId, board, dice, collects, hits, turn } = room;
