@@ -101,7 +101,7 @@ const Game = () => {
           <div>{JSON.stringify(game.dice)}</div>
 
           <button
-            disabled={game.turn !== player.color || game.isRoll}
+            disabled={game.turn !== player.color}
             onClick={() => dispatch(ACTIONS.rollDice())}
           >
             Roll dice
