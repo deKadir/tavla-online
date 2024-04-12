@@ -79,7 +79,7 @@
   align-items: center;
   top: 50%;
   color: white;
-  z-index: 999;
+  z-index: 1;
 }
 .dice-wrapper.left {
   right: 25%;
@@ -102,6 +102,7 @@
   justify-content: center;
   align-items: center;
   gap: 0.25rem;
+  z-index: 1;
 }
 
 .column::before {
@@ -109,12 +110,6 @@
   font-size: 0.75rem;
   position: absolute;
   color: var(--lighter-color);
-}
-
-.column::after {
-  position: absolute;
-  width: 5px;
-  height: 100%;
 }
 
 .column.up.column::before {
@@ -154,6 +149,8 @@
 }
 
 .checker {
+  position: relative;
+  z-index: 9999;
   width: 50px;
   aspect-ratio: 1;
   border-radius: 50%;
