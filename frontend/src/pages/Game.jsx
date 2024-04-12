@@ -5,7 +5,7 @@ import { ACTIONS } from "../context/actions";
 import Checker from "../components/Game/Checker";
 import { useParams } from "react-router-dom";
 import { api, socket } from "../api";
-import WinModal from "../components/Game/WinModal";
+import WinModal from "../components/Game/WinnerModal";
 const Game = () => {
   const { game, dispatch } = useGameContext();
   const [error, setError] = useState("");
