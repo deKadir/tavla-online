@@ -2,7 +2,9 @@
   "dependencies": {
     "cors": "^2.8.5",
     "express": "^4.19.2",
-    "nodemon": "^3.1.0"
+    "nodemon": "^3.1.0",
+    "short-unique-id": "^5.0.3",
+    "socket.io": "^4.7.5"
   },
   "scripts": {
     "dev": "nodemon index.js"

@@ -1,6 +1,6 @@
 @import "@picocss/pico";
 @import "./board.css";
-
+@import "./start.css";
 html,
 body,
 #root {

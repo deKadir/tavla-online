@@ -1,12 +1,20 @@
-import { createContext, useContext, useReducer } from "react";
+import { createContext, useContext, useEffect, useReducer } from "react";
 import PlayerManager from "./PlayerManager";
 import { ACTION_TYPES } from "./actions";
 import { produce } from "immer";
-import { initialColumns } from "../utils/game";
+import { socket } from "../api";
 
 const initialValues = {
-  turn: "black",
-  board: [...initialColumns],
+  roomId: "",
+  nickname: localStorage.getItem("nickname") ?? "",
+  turn: "white",
+  player: {
+    color: "",
+    id: "",
+  },
+  board: [],
+  status: "",
+  players: [],
   dice: [],
   hits: [],
   moves: [],
@@ -17,6 +25,9 @@ const initialValues = {
 };
 const GameContext = createContext();
 
+const initGameReducer = (state) => {
+  return { ...state };
+};
 const gameReducer = produce((state, action) => {
   const manager = new PlayerManager(state);
 
@@ -29,23 +40,61 @@ const gameReducer = produce((state, action) => {
       manager.rollDice();
       manager.setMoves();
       manager.calculateMoves();
+
+      socket.emit("room", { ...manager.state });
       return manager.state;
     }
     case ACTION_TYPES.MOVE_CHECKER: {
       manager.moveChecker(action.colIndex);
+      socket.emit("room", { ...manager.state });
       return manager.state;
     }
     case ACTION_TYPES.COLLECT_CHECKER: {
+      socket.emit("room", { ...manager.state });
       manager.collectChecker();
+      return manager.state;
     }
-    default:
+    case ACTION_TYPES.SET_NICKNAME: {
+      localStorage.setItem("nickname", action.nickname);
+      return {
+        ...state,
+        nickname: action.nickname,
+      };
+    }
+    case ACTION_TYPES.SET_GAME: {
+      return {
+        ...state,
+        ...action.game,
+      };
+    }
+    case ACTION_TYPES.SET_PLAYER: {
+      return {
+        ...state,
+        player: { ...action.player },
+      };
+    }
+    case ACTION_TYPES.default:
       return state;
   }
 });
 
 const GameProvider = ({ children }) => {
-  const [game, dispatch] = useReducer(gameReducer, initialValues);
-  console.log(game);
+  const [game, dispatch] = useReducer(
+    gameReducer,
+    initialValues,
+    initGameReducer
+  );
+  useEffect(() => {
+    socket.on("connect", () => {
+      console.log("connected");
+    });
+    return () => {
+      socket.off("disconnect", () => {
+        console.log("disconnected");
+      });
+    };
+  }, []);
+
   const values = {
     game,
     dispatch,
@@ -55,5 +104,10 @@ const GameProvider = ({ children }) => {
 };
 
 export const useGameContext = () => useContext(GameContext);
+
+export const useIsMyTurn = () => {
+  const { game } = useGameContext();
+  return game.turn === player?.turn;
+};
 
 export default GameProvider;

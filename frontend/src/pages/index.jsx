@@ -1,23 +1,20 @@
 import Game from "./Game";
 import Start from "./Start";
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
 
-const pages = [
+const pages = createBrowserRouter([
   {
     path: "/",
     element: <Start />,
   },
   {
-    path: "/game",
+    path: "/game/:roomId",
     element: <Game />,
   },
-];
-//Small project no need for react router dom
-const Pages = () => {
-  const path = window.location.pathname;
+]);
 
-  const Page = pages.find((page) => path.slice(1) === page.path.split("/")[1])
-    ?.element ?? <h1>Opps! aradığın sayfa bulunamadı.</h1>;
-  return Page;
+const Pages = () => {
+  return <RouterProvider router={pages} />;
 };
 
 export default Pages;

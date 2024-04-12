@@ -1,12 +1,51 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Column from "../components/Game/Column";
 import { useGameContext } from "../context/GameProvider";
 import { ACTIONS } from "../context/actions";
 import Checker from "../components/Game/Checker";
-
+import { useParams } from "react-router-dom";
+import { api, socket } from "../api";
 const Game = () => {
   const { game, dispatch } = useGameContext();
+  const [error, setError] = useState("");
+  console.log(game);
+  const params = useParams();
+  useEffect(() => {
+    (async () => {
+      setError("");
+      const roomId = params.roomId;
+      if (!roomId) {
+        return setError("Böyle bir oyun bulunamadı!");
+      }
+      try {
+        const { data: roomData } = await api.getRoom(roomId);
+        const { id, hits, board, status, collect, players } = roomData;
+        socket.emit("join room", roomId, (player) => {
+          console.log(player);
+          dispatch(ACTIONS.setPlayer(player));
+        });
+        dispatch(
+          ACTIONS.setGame({ hits, board, status, collect, roomId: id, players })
+        );
+      } catch (err) {
+        setError("Böyle bir oyun bulunamadı!");
+      }
+    })();
+  }, [params.roomId]);
 
+  useEffect(() => {
+    socket.on(game.roomId, (room) => {
+      dispatch(ACTIONS.setGame({ ...room }));
+    });
+  }, [socket, game.roomId]);
+  if (error) {
+    return (
+      <main>
+        <h1>{error}</h1>
+      </main>
+    );
+  }
+  console.log(game.player);
   return (
     <main className="wrapper">
       <div className={`board`}>
