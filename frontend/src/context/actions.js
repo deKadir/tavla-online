@@ -6,6 +6,7 @@ export const ACTION_TYPES = {
   SET_NICKNAME: "SET_NICKNAME",
   SET_GAME: "SET_GAME",
   SET_PLAYER: "SET_PLAYER",
+  SET_WIN: "SET_WIN",
 };
 
 export const ACTIONS = {
@@ -32,5 +33,9 @@ export const ACTIONS = {
   setPlayer: (player) => ({
     type: ACTION_TYPES.SET_PLAYER,
     player,
+  }),
+  setWin: (winner) => ({
+    type: ACTION_TYPES.SET_WIN,
+    winner,
   }),
 };

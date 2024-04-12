@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import Column from "../components/Game/Column";
 import { useGameContext } from "../context/GameProvider";
 import { ACTIONS } from "../context/actions";
@@ -8,8 +8,20 @@ import { api, socket } from "../api";
 const Game = () => {
   const { game, dispatch } = useGameContext();
   const [error, setError] = useState("");
-  console.log(game);
+  const player = game?.player;
   const params = useParams();
+  const board = useMemo(() => {
+    if (player?.color === "white") {
+      return [...game.board]
+        ?.map((col) => ({
+          ...col,
+          direction: col.direction === "up" ? "down" : "up",
+        }))
+        .reverse();
+    } else {
+      return game?.board;
+    }
+  }, [player?.color, game?.board]);
   useEffect(() => {
     (async () => {
       setError("");
@@ -38,6 +50,8 @@ const Game = () => {
       dispatch(ACTIONS.setGame({ ...room }));
     });
   }, [socket, game.roomId]);
+
+  console.log(board);
   if (error) {
     return (
       <main>
@@ -45,7 +59,7 @@ const Game = () => {
       </main>
     );
   }
-  console.log(game.player);
+
   return (
     <main className="wrapper">
       <div className={`board`}>
@@ -82,8 +96,12 @@ const Game = () => {
         <div
           className={`dice-wrapper ${game.turn === "black" ? "left" : "right"}`}
         >
-          <span>{JSON.stringify(game.dice)}</span>
-          <button onClick={() => dispatch(ACTIONS.rollDice())}>
+          <div>{JSON.stringify(game.dice)}</div>
+
+          <button
+            disabled={game.turn !== player.color}
+            onClick={() => dispatch(ACTIONS.rollDice())}
+          >
             Roll dice
           </button>
         </div>
@@ -93,7 +111,7 @@ const Game = () => {
           ))}
         </div>
         {/* Top */}
-        {game.board
+        {board
           .slice(0, 12)
           .map(({ index, checkers, canPlay, direction, highlight }) => (
             <Column
@@ -108,7 +126,7 @@ const Game = () => {
             />
           ))}
         {/* bottom */}
-        {game.board
+        {board
           .slice(12, 24)
           .reverse()
           .map(({ index, checkers, canPlay, direction, highlight }) => (

@@ -8,6 +8,7 @@
   --divider-width: 50px;
   --divider-color: var(--board-border-color);
   --highlight-color: #ffbf00;
+  --lighter-color: #a4acba;
 }
 .wrapper {
   display: flex;
@@ -100,17 +101,38 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  gap: 0.5rem;
+  gap: 0.25rem;
 }
 
 .column::before {
   content: attr(col-index);
+  font-size: 0.75rem;
   position: absolute;
+  color: var(--lighter-color);
 }
+
 .column::after {
   position: absolute;
   width: 5px;
   height: 100%;
+}
+
+.column.up.column::before {
+  top: -1.5rem;
+  font-weight: bold;
+}
+
+.column.down.column::before {
+  bottom: -1.5rem;
+  font-weight: bold;
+}
+
+.column.up.shrink .checker:not(:last-child) {
+  margin-top: -1.5rem;
+}
+
+.column.down.shrink .checker:not(:last-child) {
+  margin-bottom: -1.5rem;
 }
 
 .column.highlight {

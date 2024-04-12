@@ -2,7 +2,7 @@ import { useGameContext } from "../../context/GameProvider";
 import { ACTIONS } from "../../context/actions";
 import Checker from "./Checker";
 const Column = ({ checkers, direction, highlight, index }) => {
-  const { game, dispatch } = useGameContext();
+  const { dispatch } = useGameContext();
 
   const handleClick = () => {
     if (highlight) {
@@ -13,7 +13,9 @@ const Column = ({ checkers, direction, highlight, index }) => {
     <>
       {(index === 17 || index === 6) && <div className="divider" />}
       <div
-        className={`column ${direction} ${highlight ? "highlight" : ""}`}
+        className={`column ${direction} ${highlight ? "highlight" : ""} ${
+          checkers?.length > 5 ? "shrink" : ""
+        }`}
         col-index={index + 1}
         onClick={handleClick}
       >

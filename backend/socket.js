@@ -45,12 +45,13 @@ class Socket {
     callback(player);
   }
   handleRoom(socket, room) {
-    const { roomId, board, dice, collects, hits } = room;
+    const { roomId, board, dice, collects, hits, turn } = room;
     const updatedRoom = manager.findAndUpdateRoom(roomId, {
       board,
       dice,
       collects,
       hits,
+      turn,
     });
     socket.broadcast.emit(roomId, updatedRoom);
     return updatedRoom;

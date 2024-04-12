@@ -1,6 +1,6 @@
 import { createContext, useContext, useEffect, useReducer } from "react";
 import PlayerManager from "./PlayerManager";
-import { ACTION_TYPES } from "./actions";
+import { ACTIONS, ACTION_TYPES } from "./actions";
 import { produce } from "immer";
 import { socket } from "../api";
 
@@ -14,6 +14,7 @@ const initialValues = {
   },
   board: [],
   status: "",
+  winner: "",
   players: [],
   dice: [],
   hits: [],
@@ -73,6 +74,13 @@ const gameReducer = produce((state, action) => {
         player: { ...action.player },
       };
     }
+    case ACTION_TYPES.SET_WIN: {
+      return {
+        ...state,
+        winner: action.winner,
+        status: "FINISHED",
+      };
+    }
     case ACTION_TYPES.default:
       return state;
   }
@@ -95,6 +103,20 @@ const GameProvider = ({ children }) => {
     };
   }, []);
 
+  useEffect(() => {
+    const isWhiteWin =
+      game.collects.filter((ch) => ch.color === "white").length === 14;
+    const isBlackWin =
+      game.collects.filter((ch) => ch.color === "white").length === 14;
+    if (isBlackWin || isWhiteWin) {
+      dispatch(ACTIONS.setWin(isWhiteWin ? "white" : "black"));
+    }
+  }, [game.collects]);
+  useEffect(() => {
+    socket.on("win", (winner) => {
+      dispatch(ACTIONS.setWin(winner));
+    });
+  }, []);
   const values = {
     game,
     dispatch,

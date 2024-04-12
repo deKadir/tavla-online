@@ -114,6 +114,9 @@ class Manager {
   }
 
   canCollectChecker(checkerId) {
+    if (!this.canCollectCheckers()) {
+      return false;
+    }
     const hasCollectable = this.state.moves.some((mv) => {
       const collectIndex = this.state.turn === "white" ? mv - 1 : 24 - mv;
 
@@ -152,7 +155,7 @@ class Manager {
     const canCollect = this.state.board
       .filter((col) => col?.checkers?.[0]?.color === this.state.turn)
       .every((col) => homeIndexes.includes(col.index));
-
+    console.log(canCollect);
     return canCollect;
   }
 
@@ -209,9 +212,7 @@ class Manager {
     }
     this.highlightColumns(...columns);
   }
-  endGame() {
-    alert(this.state.turn + "wins the game!");
-  }
+
   calculateMoves() {
     this.state.canCollect = false;
     this.disableAllCheckers();
@@ -276,8 +277,6 @@ class Manager {
         const lastColIndex = this.state.turn === "white" ? cols.length - 1 : 0;
         const checker = cols[lastColIndex].checkers[0];
         this.enableChecker(checker.id);
-      } else {
-        this.endGame();
       }
     }
     if (!this.hasAvailableMoves()) {
