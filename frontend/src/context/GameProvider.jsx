@@ -12,6 +12,7 @@ const initialValues = {
     color: "",
     id: "",
   },
+  isRoll: false,
   board: [],
   status: "",
   winner: "",

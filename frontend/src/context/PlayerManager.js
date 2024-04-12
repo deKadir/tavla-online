@@ -9,6 +9,7 @@ class Manager {
   //rolls dice
   rollDice() {
     this.state.dice = [randomInteger(1, 6), randomInteger(1, 6)];
+    this.state.isRoll = true;
     return this.state;
   }
   //set available moves
@@ -318,6 +319,7 @@ class Manager {
   }
 
   changeTurn() {
+    this.state.isRoll = false;
     this.state.turn = this.state.turn === "white" ? "black" : "white";
   }
 }
