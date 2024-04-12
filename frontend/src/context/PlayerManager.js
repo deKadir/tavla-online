@@ -215,6 +215,7 @@ class Manager {
 
   calculateMoves() {
     this.state.canCollect = false;
+
     this.disableAllCheckers();
     const hits = this.getHits();
     if (!isEmpty(hits)) {
@@ -259,7 +260,7 @@ class Manager {
           (col) => col?.checkers?.[0]?.color === this.state.turn
         );
         const lastIndex = this.state.turn === "white" ? board.length - 1 : 0;
-        const collectIndex = board[lastIndex].index;
+        const collectIndex = board[lastIndex]?.index;
         const collectMove =
           this.state.turn === "white" ? collectIndex + 1 : 24 - collectIndex;
 

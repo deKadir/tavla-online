@@ -367,7 +367,7 @@ class GameManager {
       turn: "white",
       board: initialBoard,
       hits: [],
-      collect: [],
+      collects: [],
     };
     this.rooms.push(room);
     return room;

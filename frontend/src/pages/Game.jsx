@@ -144,7 +144,7 @@ const Game = () => {
             />
           ))}
       </div>
-      <div>users</div>
+      {/* <div>users</div> */}
     </main>
   );
 };

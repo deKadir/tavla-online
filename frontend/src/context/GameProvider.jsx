@@ -51,8 +51,8 @@ const gameReducer = produce((state, action) => {
       return manager.state;
     }
     case ACTION_TYPES.COLLECT_CHECKER: {
-      socket.emit("room", { ...manager.state });
       manager.collectChecker();
+      socket.emit("room", { ...manager.state });
       return manager.state;
     }
     case ACTION_TYPES.SET_NICKNAME: {
@@ -105,9 +105,9 @@ const GameProvider = ({ children }) => {
 
   useEffect(() => {
     const isWhiteWin =
-      game.collects.filter((ch) => ch.color === "white").length === 14;
+      game.collects.filter((ch) => ch.color === "white").length === 15;
     const isBlackWin =
-      game.collects.filter((ch) => ch.color === "white").length === 14;
+      game.collects.filter((ch) => ch.color === "white").length === 15;
     if (isBlackWin || isWhiteWin) {
       dispatch(ACTIONS.setWin(isWhiteWin ? "white" : "black"));
     }
