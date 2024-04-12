@@ -8,6 +8,7 @@ class Manager {
 
   //rolls dice
   rollDice() {
+    this.state.isRolled = true;
     this.state.dice = [randomInteger(1, 6), randomInteger(1, 6)];
     return this.state;
   }
@@ -319,6 +320,7 @@ class Manager {
   }
 
   changeTurn() {
+    this.state.isRolled = false;
     this.state.turn = this.state.turn === "white" ? "black" : "white";
   }
 }
