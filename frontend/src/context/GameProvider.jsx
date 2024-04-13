@@ -108,7 +108,7 @@ const GameProvider = ({ children }) => {
     const isWhiteWin =
       game.collects.filter((ch) => ch.color === "white").length === 15;
     const isBlackWin =
-      game.collects.filter((ch) => ch.color === "white").length === 15;
+      game.collects.filter((ch) => ch.color === "black").length === 15;
     if (isBlackWin || isWhiteWin) {
       dispatch(ACTIONS.setWin(isWhiteWin ? "white" : "black"));
     }
